@@ -19,10 +19,13 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiGetMessagesResponse;
+import com.vk.sdk.api.model.VKApiMessage;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.dialogs.VKShareDialog;
 import com.vk.sdk.util.VKUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,16 +57,37 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 listView = (ListView) findViewById(R.id.list);
 
-                VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "first_name,last_name"));
+                VKRequest request = VKApi.messages().get(VKParameters.from(VKApiConst.COUNT, 10));
                 request.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
                     public void onComplete(VKResponse response) {
                         super.onComplete(response);
-                        VKList list = (VKList) response.parsedModel;
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, list);
+
+                        VKApiGetMessagesResponse getMessagesResponse = (VKApiGetMessagesResponse) response.parsedModel;
+                        VKList<VKApiMessage> list = getMessagesResponse.items;
+
+                        ArrayList<String> arrayList = new ArrayList<>();
+
+                        for(VKApiMessage msg: list) {
+                            arrayList.add(msg.body);
+                        }
+
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this,
+                                android.R.layout.simple_expandable_list_item_1, arrayList);
                         listView.setAdapter(arrayAdapter);
                     }
                 });
+//show friends
+//                VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "first_name,last_name"));
+//                request.executeWithListener(new VKRequest.VKRequestListener() {
+//                    @Override
+//                    public void onComplete(VKResponse response) {
+//                        super.onComplete(response);
+//                        VKList list = (VKList) response.parsedModel;
+//                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, list);
+//                        listView.setAdapter(arrayAdapter);
+//                    }
+//                });
 // Пользователь успешно авторизовался
             }
             @Override
