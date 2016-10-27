@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.WALL};
     private ListView listView;
+    Bundle bundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(VKAccessToken res) {
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 listView = (ListView) findViewById(R.id.list);
-
+                bundle.clear();
+                bundle.putString("status", "success");
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
+                firebaseAnalytics.logEvent("login",bundle);
                 VKRequest request = VKApi.messages().get(VKParameters.from(VKApiConst.COUNT, 10));
                 request.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
@@ -92,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onError(VKError error) {
+                bundle.clear();
+                bundle.putString("status", "failed");
+                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
+                firebaseAnalytics.logEvent("login",bundle);
                 Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
 // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
             }
