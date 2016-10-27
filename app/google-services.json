@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "322322032870",
+    "project_id": "firebase-vokapp"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322322032870:android:d03cba5880c59b8d",
+        "android_client_info": {
+          "package_name": "com.example.qwerty.vok_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcj9WD7Pt8_tj1s95cBPraRc-fWkHnJQA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-86456438-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
