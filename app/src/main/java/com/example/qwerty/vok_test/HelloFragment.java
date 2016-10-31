@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+
 public class HelloFragment extends Fragment {
+
     private final static String TAG = MainActivity.class.getSimpleName();
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "heloooooo");

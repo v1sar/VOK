@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -41,24 +42,16 @@ import com.vk.sdk.util.VKUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.WALL};
     private ListView listView;
     Bundle bundle = new Bundle();
-
+    private final static String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        View.OnClickListener oclVK = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                VKSdk.login(MainActivity.this, scope);
-            }
-        };
-       // findViewById(R.id.logVK).setOnClickListener(oclVK);
 ///////////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,6 +78,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onActivityResult(final int requestCode,final int resultCode,final Intent data) {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
+            @Override
+            public void onResult(VKAccessToken res) {
+                Log.d(TAG, "wtwfwfwfwfwfgg");
+                FragmentManager fM = getSupportFragmentManager();
+                fM.findFragmentById(R.id.content_main).onActivityResult(requestCode, resultCode, data);
+// Пользователь успешно авторизовался
+            }
+            @Override
+            public void onError(VKError error) {
+                Toast.makeText(MainActivity.this, "hhhhhhhh", Toast.LENGTH_SHORT);
+// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
+            }
+        })) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -99,66 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
-            @Override
-            public void onResult(VKAccessToken res) {
-                /*** Flurry Analitics ***/
-                String eventId = "login";
-                FlurryAgent.logEvent(eventId);
-                /*** ***/
-                Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                ///some shit
-
-//                listView = frag.getListView();
-                bundle.clear();
-                bundle.putString("status", "success");
-                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
-                firebaseAnalytics.logEvent("login",bundle);
-                VKRequest request = VKApi.messages().get(VKParameters.from(VKApiConst.COUNT, 10));
-                request.executeWithListener(new VKRequest.VKRequestListener() {
-                    @Override
-                    public void onComplete(VKResponse response) {
-                        super.onComplete(response);
-
-                       // listView = (ListView) frag.getView().findViewById(R.id.list);
-
-                        VKApiGetMessagesResponse getMessagesResponse = (VKApiGetMessagesResponse) response.parsedModel;
-                        VKList<VKApiMessage> list = getMessagesResponse.items;
-
-                        ArrayList<String> arrayList = new ArrayList<>();
-
-                        for(VKApiMessage msg: list) {
-                            arrayList.add(msg.body);
-                        }
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this,
-                                android.R.layout.simple_expandable_list_item_1, arrayList);
-                        listView.setAdapter(arrayAdapter);
-
-
-                    }
-                });
-
-            }
-            @Override
-            public void onError(VKError error) {
-                bundle.clear();
-                bundle.putString("status", "failed");
-                FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
-                firebaseAnalytics.logEvent("login",bundle);
-                /*** Flurry Analitics ***/
-                String eventId = "login failed";
-                FlurryAgent.logEvent(eventId);
-                /*** ***/
-                Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-
-            }
-        })) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
@@ -166,13 +119,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setDiagFrag();//VKSdk.login(MainActivity.this, scope);
 //        } else if (id == R.id.nav_gallery) {
 //
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -190,5 +136,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_main, new DialogFragment());
         transaction.commit();
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Toast.makeText(this, "123", Toast.LENGTH_SHORT);
+//        FragmentManager fM = getSupportFragmentManager();
+//        fM.findFragmentById(R.id.content_main).onActivityResult(requestCode, resultCode, data);
+//    }
 
 }
