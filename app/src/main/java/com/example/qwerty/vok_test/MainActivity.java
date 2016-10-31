@@ -6,6 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -54,9 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 VKSdk.login(MainActivity.this, scope);
             }
         };
-        findViewById(R.id.logVK).setOnClickListener(oclVK);
+       // findViewById(R.id.logVK).setOnClickListener(oclVK);
 ///////////
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -73,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final String FLURRY_KEY = "P5J926ZM3YPF4WTPRPVY";
         FlurryAgent.init(MainActivity.this, FLURRY_KEY);
         /*** ***/
+
+        ///
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_main, new HelloFragment());
+        transaction.commit();
     }
 
     @Override
@@ -98,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String eventId = "login";
                 FlurryAgent.logEvent(eventId);
                 /*** ***/
-
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                listView = (ListView) findViewById(R.id.list);
+                ///some shit
+
+//                listView = frag.getListView();
                 bundle.clear();
                 bundle.putString("status", "success");
                 FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
@@ -111,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onComplete(VKResponse response) {
                         super.onComplete(response);
 
+                       // listView = (ListView) frag.getView().findViewById(R.id.list);
+
                         VKApiGetMessagesResponse getMessagesResponse = (VKApiGetMessagesResponse) response.parsedModel;
                         VKList<VKApiMessage> list = getMessagesResponse.items;
 
@@ -119,24 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         for(VKApiMessage msg: list) {
                             arrayList.add(msg.body);
                         }
-
                         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this,
                                 android.R.layout.simple_expandable_list_item_1, arrayList);
                         listView.setAdapter(arrayAdapter);
+
+
                     }
                 });
-//show friends
-//                VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "first_name,last_name"));
-//                request.executeWithListener(new VKRequest.VKRequestListener() {
-//                    @Override
-//                    public void onComplete(VKResponse response) {
-//                        super.onComplete(response);
-//                        VKList list = (VKList) response.parsedModel;
-//                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, list);
-//                        listView.setAdapter(arrayAdapter);
-//                    }
-//                });
-// Пользователь успешно авторизовался
+
             }
             @Override
             public void onError(VKError error) {
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FlurryAgent.logEvent(eventId);
                 /*** ***/
                 Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
+
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -158,6 +160,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        int id = item.getItemId();
+
+        if (id == R.id.nav_vk) {
+            setDiagFrag();//VKSdk.login(MainActivity.this, scope);
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
+    private void setDiagFrag(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        Fragment hello = fragmentManager.findFragmentById(R.id.content_main);
+        if (hello != null && hello.isAdded())
+        {
+            transaction.remove(hello);
+        }
+
+        transaction.replace(R.id.content_main, new DialogFragment());
+        transaction.commit();
+    }
+
 }
