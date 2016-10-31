@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.flurry.android.FlurryAgent;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -49,6 +50,25 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         findViewById(R.id.logVK).setOnClickListener(oclVK);
+
+        /*** Flurry Analitics ***/
+        final String FLURRY_KEY = "P5J926ZM3YPF4WTPRPVY";
+        FlurryAgent.init(MainActivity.this, FLURRY_KEY);
+        /*** ***/
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FlurryAgent.onStartSession(MainActivity.this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        FlurryAgent.onEndSession(MainActivity.this);
     }
 
     @Override
@@ -56,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
+                /*** Flurry Analitics ***/
+                String eventId = "login";
+                FlurryAgent.logEvent(eventId);
+                /*** ***/
+
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 listView = (ListView) findViewById(R.id.list);
                 bundle.clear();
@@ -101,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("status", "failed");
                 FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
                 firebaseAnalytics.logEvent("login",bundle);
+                /*** Flurry Analitics ***/
+                String eventId = "login failed";
+                FlurryAgent.logEvent(eventId);
+                /*** ***/
                 Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
 // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
             }
