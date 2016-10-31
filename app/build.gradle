@@ -29,7 +29,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:9.8.0'
     testCompile 'junit:junit:4.12'
     compile 'com.vk:androidsdk:+'
-
+    compile 'com.android.support:design:24.2.1'
     compile 'com.flurry.android:analytics:6.2.0'
 }
 
