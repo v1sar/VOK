@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+=======
+>>>>>>> a79ede2f4c21a18ce5af07b82885e7b16d2316d4
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
@@ -25,3 +28,4 @@
     </application>
 
 </manifest>
+

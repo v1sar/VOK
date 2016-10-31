@@ -26,10 +26,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.google.android.gms:play-services-analytics:9.2.0'
     testCompile 'junit:junit:4.12'
     compile 'com.vk:androidsdk:+'
 
     compile 'com.flurry.android:analytics:6.2.0'
+}
+
 }
 
 apply plugin: 'com.google.gms.google-services'
