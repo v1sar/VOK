@@ -23,6 +23,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * Created by qwerty on 01.11.16.
  */
@@ -48,6 +51,9 @@ public class VkDiagAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (list == null) {
+            return min(users.size(),messages.size());
+        }
         return users.size();
     }
 
@@ -70,8 +76,38 @@ public class VkDiagAdapter extends BaseAdapter {
         setData.user_name = (TextView) view.findViewById(R.id.user_name);
         setData.msg = (TextView) view.findViewById(R.id.msg);
 
+//messages - out, users - in
+
+        if (list == null) {
+            for (int i=0; i<max(messages.size(),users.size()); i++) {
+                if (i<messages.size()) {
+                    setData.msg.setText(messages.get(position)); }
+                else {
+                    setData.msg.setText(" ");
+                }
+                if (i<users.size()) {
+                    setData.user_name.setText(users.get(position)); }
+                else {
+                    setData.user_name.setText(" ");
+                }
+            }
+
+//            for (int i=0; i<max(messages.size(),users.size()); i++) {
+//                if (i<messages.size()) {
+//                    setData.msg.setText(messages.get(position)); }
+//                else {
+//                    setData.msg.setText(" ");
+//                }
+//                if (i<users.size()) {
+//                    setData.user_name.setText(users.get(position)); }
+//                else {
+//                    setData.user_name.setText(" ");
+//                }
+//            }
+        } else {
             setData.msg.setText(messages.get(position));
-        setData.user_name.setText(users.get(position));
+            setData.user_name.setText(users.get(position));
+        }
 
         if (list != null) {
             view.setOnClickListener(new View.OnClickListener() {
