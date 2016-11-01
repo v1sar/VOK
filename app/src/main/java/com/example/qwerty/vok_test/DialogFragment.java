@@ -25,6 +25,8 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiDialog;
+import com.vk.sdk.api.model.VKApiGetDialogResponse;
 import com.vk.sdk.api.model.VKApiGetMessagesResponse;
 import com.vk.sdk.api.model.VKApiMessage;
 import com.vk.sdk.api.model.VKList;
@@ -43,12 +45,12 @@ public class DialogFragment extends Fragment {
     private String[] scope = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.WALL};
     protected View tView;
     private ListView listView;
-
+    private VKList listFriends;
+    
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "ggggggggg");
         View view = inflater.inflate(R.layout.fragment_dialog, container, false);
         tView = view;
-//        VKSdk.login(getActivity(), scope);
         return view;
     }
 
@@ -61,65 +63,33 @@ public class DialogFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "gohhj");
-        VKRequest request = VKApi.messages().get(VKParameters.from(VKApiConst.COUNT, 10));
-                request.executeWithListener(new VKRequest.VKRequestListener() {
+        VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "first_name, last_name"));
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                super.onComplete(response);
+                listFriends = (VKList) response.parsedModel;
+                VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
+                request1.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
                     public void onComplete(VKResponse response) {
                         super.onComplete(response);
                         listView = (ListView) tView.findViewById(R.id.list);
-                        VKApiGetMessagesResponse getMessagesResponse = (VKApiGetMessagesResponse) response.parsedModel;
-                        VKList<VKApiMessage> list = getMessagesResponse.items;
-                        ArrayList<String> arrayList = new ArrayList<>();
-                        for (VKApiMessage msg : list) {
-                            arrayList.add(msg.body);
+                        VKApiGetDialogResponse getMessagesResponse = (VKApiGetDialogResponse) response.parsedModel;
+
+                        VKList<VKApiDialog> list = getMessagesResponse.items;
+
+                        ArrayList<String> messages = new ArrayList<>();
+                        ArrayList<String> users = new ArrayList<String>();
+
+                        for (VKApiDialog msg : list) {
+                            users.add(String.valueOf(listFriends.getById(msg.message.user_id)));
+                            messages.add(msg.message.body);
                         }
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
-                                android.R.layout.simple_expandable_list_item_1, arrayList);
-                        listView.setAdapter(arrayAdapter);
+                        listView.setAdapter(new VkDiagAdapter(getActivity(), users, messages, list));
                     }
                 });
+            }
+        });
     }
-
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.d(TAG, "HEREHEREHERE");
-//        if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
-//            @Override
-//            public void onResult(VKAccessToken res) {
-//                Toast.makeText(getActivity().getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
-//                ///some shit
-//
-//                VKRequest request = VKApi.messages().get(VKParameters.from(VKApiConst.COUNT, 10));
-//                request.executeWithListener(new VKRequest.VKRequestListener() {
-//                    @Override
-//                    public void onComplete(VKResponse response) {
-//                        super.onComplete(response);
-//
-//                        listView = (ListView) tView.findViewById(R.id.list);
-//
-//                        VKApiGetMessagesResponse getMessagesResponse = (VKApiGetMessagesResponse) response.parsedModel;
-//                        VKList<VKApiMessage> list = getMessagesResponse.items;
-//
-//                        ArrayList<String> arrayList = new ArrayList<>();
-//
-//                        for(VKApiMessage msg: list) {
-//                            arrayList.add(msg.body);
-//                        }
-//                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
-//                                android.R.layout.simple_expandable_list_item_1, arrayList);
-//                        listView.setAdapter(arrayAdapter);
-//                    }
-//                });
-//            }
-//            @Override
-//            public void onError(VKError error) {
-//                Toast.makeText(getActivity().getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        })) {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
-
 }

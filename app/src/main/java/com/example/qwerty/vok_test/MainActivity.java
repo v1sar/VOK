@@ -1,6 +1,7 @@
 package com.example.qwerty.vok_test;
 
 import android.content.DialogInterface;
+import com.example.qwerty.vok_test.DialogFragment;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -47,6 +48,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView listView;
     Bundle bundle = new Bundle();
+    public VKList listFriends;
     private final static String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "wtwfwfwfwfwfgg");
                 FragmentManager fM = getSupportFragmentManager();
                 fM.findFragmentById(R.id.content_main).onActivityResult(requestCode, resultCode, data);
-// Пользователь успешно авторизовался
             }
             @Override
             public void onError(VKError error) {
-                Toast.makeText(MainActivity.this, "hhhhhhhh", Toast.LENGTH_SHORT);
-// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
+
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -136,13 +136,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_main, new DialogFragment());
         transaction.commit();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Toast.makeText(this, "123", Toast.LENGTH_SHORT);
-//        FragmentManager fM = getSupportFragmentManager();
-//        fM.findFragmentById(R.id.content_main).onActivityResult(requestCode, resultCode, data);
-//    }
 
 }
