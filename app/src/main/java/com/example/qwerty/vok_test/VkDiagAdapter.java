@@ -70,10 +70,10 @@ public class VkDiagAdapter extends BaseAdapter {
         setData.user_name = (TextView) view.findViewById(R.id.user_name);
         setData.msg = (TextView) view.findViewById(R.id.msg);
 
+            setData.msg.setText(messages.get(position));
         setData.user_name.setText(users.get(position));
-        setData.msg.setText(messages.get(position));
 
-        if (list == null) {
+        if (list != null) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

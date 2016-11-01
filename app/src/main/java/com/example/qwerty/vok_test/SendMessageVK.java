@@ -45,9 +45,9 @@ public class SendMessageVK extends AppCompatActivity {
         inList = getIntent().getStringArrayListExtra("in");
         outList = getIntent().getStringArrayListExtra("out");
         id = getIntent().getIntExtra("id", 0);
-
-        Arrays.sort(inList.toArray(), Collections.reverseOrder());
-        Arrays.sort(outList.toArray(), Collections.reverseOrder());
+//
+//        Arrays.sort(inList.toArray(), Collections.reverseOrder());
+//        Arrays.sort(outList.toArray(), Collections.reverseOrder());
 
         text = (EditText) findViewById(R.id.textMsgSend);
         listView = (ListView) findViewById(R.id.listMsg);
