@@ -28,6 +28,8 @@ import java.util.Collections;
 
 public class SendMessageVK extends AppCompatActivity {
 
+    ArrayList<String> inListDate = new ArrayList<String>();
+    ArrayList<String> outListDate = new ArrayList<String>();
     ArrayList<String> inList = new ArrayList<>();
     ArrayList<String> outList = new ArrayList<>();
     int id = 0;
@@ -44,6 +46,8 @@ public class SendMessageVK extends AppCompatActivity {
         setContentView(R.layout.dialogs);
         inList = getIntent().getStringArrayListExtra("in");
         outList = getIntent().getStringArrayListExtra("out");
+        inListDate = getIntent().getStringArrayListExtra("inDate");
+        outListDate = getIntent().getStringArrayListExtra("outDate");
         id = getIntent().getIntExtra("id", 0);
 //
 //        Arrays.sort(inList.toArray(), Collections.reverseOrder());
@@ -52,7 +56,7 @@ public class SendMessageVK extends AppCompatActivity {
         text = (EditText) findViewById(R.id.textMsgSend);
         listView = (ListView) findViewById(R.id.listMsg);
 
-        listView.setAdapter(new VkDiagAdapter(SendMessageVK.this, inList, outList));
+        listView.setAdapter(new VkDiagAdapter(SendMessageVK.this, inList, outList, inListDate, outListDate));
 
         send = (Button) findViewById(R.id.sendMsg);
         send.setOnClickListener(new View.OnClickListener() {

@@ -31,7 +31,7 @@ import static java.lang.Math.min;
  */
 
 public class VkDiagAdapter extends BaseAdapter {
-    private ArrayList<String> users, messages;
+    private ArrayList<String> users, messages, outDate, inDate;
     private Context context;
     private VKList<VKApiDialog> list;
     private final static String TAG = MainActivity.class.getSimpleName();
@@ -43,16 +43,32 @@ public class VkDiagAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public VkDiagAdapter(Context context, ArrayList<String> users, ArrayList<String> messages) {
+    public VkDiagAdapter(Context context, ArrayList<String> users, ArrayList<String> messages,
+                         ArrayList<String> outDate, ArrayList<String> inDate) {
         this.users = users;
         this.messages = messages;
+        this.outDate = outDate;
+        this.inDate = inDate;
         this.context = context;
+        boolean t = true;
+        while(t) {
+            if (users.size()<10) {
+                users.add(" ");
+            } else {
+                if (messages.size()<10) {
+                    messages.add(" ");
+                } else {
+                    t = false;
+                }
+            }
+        }
+
     }
 
     @Override
     public int getCount() {
         if (list == null) {
-            return min(users.size(),messages.size());
+            return 10;
         }
         return users.size();
     }
@@ -78,20 +94,7 @@ public class VkDiagAdapter extends BaseAdapter {
 
 //messages - out, users - in
 
-        if (list == null) {
-            for (int i=0; i<max(messages.size(),users.size()); i++) {
-                if (i<messages.size()) {
-                    setData.msg.setText(messages.get(position)); }
-                else {
-                    setData.msg.setText(" ");
-                }
-                if (i<users.size()) {
-                    setData.user_name.setText(users.get(position)); }
-                else {
-                    setData.user_name.setText(" ");
-                }
-            }
-
+//        if (list == null) {
 //            for (int i=0; i<max(messages.size(),users.size()); i++) {
 //                if (i<messages.size()) {
 //                    setData.msg.setText(messages.get(position)); }
@@ -104,20 +107,24 @@ public class VkDiagAdapter extends BaseAdapter {
 //                    setData.user_name.setText(" ");
 //                }
 //            }
-        } else {
+//
+//        } else {
             setData.msg.setText(messages.get(position));
             setData.user_name.setText(users.get(position));
-        }
+//        }
 
         if (list != null) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final ArrayList<String> inList = new ArrayList<>();
+                    final ArrayList<String> inListDate = new ArrayList<String>();
+                    final ArrayList<String> outListDate = new ArrayList<String>();
                     final ArrayList<String> outList = new ArrayList<>();
                     final int id = list.get(position).message.user_id;
                     Log.d(TAG, "1");
-                    VKRequest request = new VKRequest("messages.getHistory", VKParameters.from(VKApiConst.USER_ID, id));
+                    VKRequest request = new VKRequest("messages.getHistory", VKParameters.from(VKApiConst.USER_ID, id,
+                            VKApiConst.COUNT, "10"));
                     request.executeWithListener(new VKRequest.VKRequestListener() {
                         @Override
                         public void onComplete(VKResponse response) {
@@ -132,15 +139,19 @@ public class VkDiagAdapter extends BaseAdapter {
 
                                 for (VKApiMessage mess : msg) {
                                     if (mess.out) {
+                                        outListDate.add(String.valueOf(mess.date));
                                         outList.add(mess.body);
                                     } else {
+                                        inListDate.add(String.valueOf(mess.date));
                                         inList.add(mess.body);
                                     }
                                 }
                                 Log.d(TAG, "2");
                                 Intent intent = new Intent(context, SendMessageVK.class).putExtra("id", id)
                                         .putExtra("in", inList)
-                                        .putExtra("out", outList);
+                                        .putExtra("out", outList)
+                                        .putExtra("inDate", inListDate)
+                                        .putExtra("outDate", outListDate);
                                 context.startActivity(intent);
                             } catch (JSONException e) {
                                 e.printStackTrace();
