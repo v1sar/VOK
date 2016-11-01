@@ -46,7 +46,7 @@ public class DialogFragment extends Fragment {
     protected View tView;
     private ListView listView;
     private VKList listFriends;
-    
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "ggggggggg");
         View view = inflater.inflate(R.layout.fragment_dialog, container, false);
