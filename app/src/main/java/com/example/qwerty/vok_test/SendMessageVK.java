@@ -28,10 +28,8 @@ import java.util.Collections;
 
 public class SendMessageVK extends AppCompatActivity {
 
-    ArrayList<String> inListDate = new ArrayList<String>();
-    ArrayList<String> outListDate = new ArrayList<String>();
     ArrayList<String> inList = new ArrayList<>();
-    ArrayList<String> outList = new ArrayList<>();
+    ArrayList<Integer> outList = new ArrayList<>();
     int id = 0;
 
     EditText text;
@@ -45,18 +43,16 @@ public class SendMessageVK extends AppCompatActivity {
         Log.d(TAG, "IM HERE");
         setContentView(R.layout.dialogs);
         inList = getIntent().getStringArrayListExtra("in");
-        outList = getIntent().getStringArrayListExtra("out");
-        inListDate = getIntent().getStringArrayListExtra("inDate");
-        outListDate = getIntent().getStringArrayListExtra("outDate");
+        outList = getIntent().getIntegerArrayListExtra("out");
         id = getIntent().getIntExtra("id", 0);
-//
-//        Arrays.sort(inList.toArray(), Collections.reverseOrder());
-//        Arrays.sort(outList.toArray(), Collections.reverseOrder());
+        
+        Collections.reverse(inList);
+        Collections.reverse(outList);
 
         text = (EditText) findViewById(R.id.textMsgSend);
         listView = (ListView) findViewById(R.id.listMsg);
 
-        listView.setAdapter(new VkDiagAdapter(SendMessageVK.this, inList, outList, inListDate, outListDate));
+        listView.setAdapter(new VkDiagAdapter(SendMessageVK.this, inList, outList));
 
         send = (Button) findViewById(R.id.sendMsg);
         send.setOnClickListener(new View.OnClickListener() {

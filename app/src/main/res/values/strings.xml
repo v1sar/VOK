@@ -4,4 +4,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="hello_string">Добро пожаловать!\n Выберите подходящую соц. сеть</string>
+    <string name="send">Отправить</string>
+    <string name="sendMessage">Введите сообщение</string>
 </resources>

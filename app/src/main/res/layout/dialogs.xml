@@ -13,11 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:hint="@string/sendMessage"
         android:id="@+id/textMsgSend" />
 
     <Button
-        android:text="Button"
+        android:text="@string/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sendMsg" />
