@@ -66,11 +66,6 @@ public class DialogFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "gohhj");
 
-//        VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
-//        VKRequest request2 = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, id));
-
-       // VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, ));
-
         VKRequest request = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
@@ -89,8 +84,6 @@ public class DialogFragment extends Fragment {
                     sb.append(s);
                     sb.append(", ");
                 }
-                //listFriends = (VKList) response.parsedModel;
-                //VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
                 VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, sb.toString()));
                 request1.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
@@ -98,13 +91,6 @@ public class DialogFragment extends Fragment {
                         super.onComplete(response);
                         listView = (ListView) tView.findViewById(R.id.list);
                         listFriends = (VKList) response.parsedModel;
-//                        VKApiGetDialogResponse getMessagesResponse = (VKApiGetDialogResponse) response.parsedModel;
-//
-//                        VKList<VKApiDialog> list = getMessagesResponse.items;
-//
-//                        ArrayList<String> messages = new ArrayList<>();
-//                        ArrayList<String> users = new ArrayList<String>();
-
                         ArrayList<String> usersName = new ArrayList<>();
                         ArrayList<String> messages = new ArrayList<>();
 

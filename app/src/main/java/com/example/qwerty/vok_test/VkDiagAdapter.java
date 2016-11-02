@@ -97,7 +97,7 @@ public class VkDiagAdapter extends BaseAdapter {
                     final int id = list.get(position).message.user_id;
                     Log.d(TAG, "1");
                     VKRequest request = new VKRequest("messages.getHistory", VKParameters.from(VKApiConst.USER_ID, id,
-                            VKApiConst.COUNT, "10"));
+                            VKApiConst.COUNT, "20"));
                     request.executeWithListener(new VKRequest.VKRequestListener() {
                         @Override
                         public void onComplete(VKResponse response) {
