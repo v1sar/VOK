@@ -1,35 +1,39 @@
 {
   "project_info": {
-    "project_number": "322322032870",
-    "project_id": "firebase-vokapp"
+    "project_number": "613661179348",
+    "firebase_url": "https://voktest-f1cae.firebaseio.com",
+    "project_id": "voktest-f1cae",
+    "storage_bucket": "voktest-f1cae.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:322322032870:android:d03cba5880c59b8d",
+        "mobilesdk_app_id": "1:613661179348:android:d03cba5880c59b8d",
         "android_client_info": {
           "package_name": "com.example.qwerty.vok_test"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "613661179348-966tcvrn6unrc4dlvh6c98761g41didt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBcj9WD7Pt8_tj1s95cBPraRc-fWkHnJQA"
+          "current_key": "AIzaSyDDj7jCMBM9iMce3T4ED2WDtC1eDJJGtVE"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-86456438-1"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
