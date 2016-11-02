@@ -41,11 +41,28 @@ import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.dialogs.VKShareDialog;
 import com.vk.sdk.util.VKUtil;
 
+/* Одноклассники */
+//import ru.ok.android.sdk.OKRestHelper;
+//import ru.ok.android.sdk.Odnoklassniki;
+//import ru.ok.android.sdk.OkListener;
+//import ru.ok.android.sdk.OkRequestMode;
+//import ru.ok.android.sdk.Shared;
+//import ru.ok.android.sdk.util.OkAuthType;
+//import ru.ok.android.sdk.util.OkDevice;
+//import ru.ok.android.sdk.util.OkScope;
+/* Одноклассники */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    /* Одноклассники */
+    protected static final String APP_ID = "125497344";
+    protected static final String APP_KEY = "CBABPLHIABABABABA";
+    protected static final String REDIRECT_URL = "okauth://ok125497344";
+    /* Одноклассники */
+
     private ListView listView;
     Bundle bundle = new Bundle();
     public VKList listFriends;
