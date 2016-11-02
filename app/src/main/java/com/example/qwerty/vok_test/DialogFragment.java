@@ -46,6 +46,8 @@ public class DialogFragment extends Fragment {
     protected View tView;
     private ListView listView;
     private VKList listFriends;
+    private VKList<VKApiDialog> list;
+    private ArrayList<String> users;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "ggggggggg");
@@ -63,30 +65,55 @@ public class DialogFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "gohhj");
-        VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "first_name, last_name"));
+
+//        VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
+//        VKRequest request2 = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, id));
+
+       // VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, ));
+
+        VKRequest request = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
-                listFriends = (VKList) response.parsedModel;
-                VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
+                VKApiGetDialogResponse getMessagesResponse = (VKApiGetDialogResponse) response.parsedModel;
+
+                list = getMessagesResponse.items;
+                users = new ArrayList<>();
+                StringBuilder sb = new StringBuilder();
+                for (VKApiDialog msg : list) {
+                    users.add(String.valueOf(msg.message.user_id));
+                }
+                for (String s : users)
+                {
+                    sb.append(s);
+                    sb.append(", ");
+                }
+                //listFriends = (VKList) response.parsedModel;
+                //VKRequest request1 = VKApi.messages().getDialogs(VKParameters.from(VKApiConst.COUNT, 10));
+                VKRequest request1 = VKApi.users().get(VKParameters.from(VKApiConst.USER_IDS, sb.toString()));
                 request1.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
                     public void onComplete(VKResponse response) {
                         super.onComplete(response);
                         listView = (ListView) tView.findViewById(R.id.list);
-                        VKApiGetDialogResponse getMessagesResponse = (VKApiGetDialogResponse) response.parsedModel;
+                        listFriends = (VKList) response.parsedModel;
+//                        VKApiGetDialogResponse getMessagesResponse = (VKApiGetDialogResponse) response.parsedModel;
+//
+//                        VKList<VKApiDialog> list = getMessagesResponse.items;
+//
+//                        ArrayList<String> messages = new ArrayList<>();
+//                        ArrayList<String> users = new ArrayList<String>();
 
-                        VKList<VKApiDialog> list = getMessagesResponse.items;
-
+                        ArrayList<String> usersName = new ArrayList<>();
                         ArrayList<String> messages = new ArrayList<>();
-                        ArrayList<String> users = new ArrayList<String>();
 
                         for (VKApiDialog msg : list) {
-                            users.add(String.valueOf(listFriends.getById(msg.message.user_id)));
+
+                            usersName.add(String.valueOf(listFriends.getById(msg.message.user_id)));
                             messages.add(msg.message.body);
                         }
-                        listView.setAdapter(new VkDiagAdapter(getActivity(), users, messages, list));
+                        listView.setAdapter(new VkDiagAdapter(getActivity(), usersName, messages, list));
                     }
                 });
             }

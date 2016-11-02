@@ -45,7 +45,7 @@ public class SendMessageVK extends AppCompatActivity {
         inList = getIntent().getStringArrayListExtra("in");
         outList = getIntent().getIntegerArrayListExtra("out");
         id = getIntent().getIntExtra("id", 0);
-        
+
         Collections.reverse(inList);
         Collections.reverse(outList);
 
